@@ -1,0 +1,203 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Portal Estilo Luxo · Design Tokens v1.0 (README_Produto.pdf §2.1 & Figma_Tokens.json) */
+  --bg: #0A0908;
+  --bg-elevated: #14110E;
+  --surface: #1C1814;
+  --surface-alt: #25201A;
+  --primary: #F5EFE6;
+  --primary-dim: #C9C2B6;
+  --muted: #8A8278;
+  --on-accent: #0A0908;
+  --accent: #C9A961;
+  --accent-bright: #E0C47C;
+  --accent-deep: #8B7355;
+  --accent-tint: rgba(201, 169, 97, 0.08);
+  --accent-tint-border: rgba(201, 169, 97, 0.18);
+  --divider: #2A2520;
+  --hairline: rgba(201, 169, 97, 0.12);
+  --success: #7FA66B;
+  --success-tint: rgba(127, 166, 107, 0.12);
+  --danger: #C97264;
+  --danger-tint: rgba(201, 114, 100, 0.12);
+  --warning: #D4A547;
+  --figma-annotation: #4FC3F7;
+
+  /* Typography Tokens (§2.2) */
+  --font-heading: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-num: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --scrollbar-thumb: #2A2520;
+  --scrollbar-track: #0A0908;
+  color-scheme: dark light;
+  accent-color: var(--accent);
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--primary);
+  overflow-x: hidden;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  text-wrap: balance;
+}
+
+p, blockquote, li, .pretty-text {
+  text-wrap: pretty;
+}
+
+/* 14 Componentes Reutilizáveis (Figma_Frame.pdf Slide 2 & README_Produto.pdf §2.4) */
+.phone-frame {
+  width: 375px;
+  min-height: 760px;
+  background: #050505;
+  border-radius: 32px;
+  border: 1px solid var(--divider);
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), inset 0 0 0 2px #0E0C0A, 0 0 0 1px rgba(201, 169, 97, 0.08);
+  padding: 10px;
+}
+
+.prod-card {
+  background: var(--bg-elevated);
+  border-radius: 8px;
+  border: 1px solid var(--accent-tint-border);
+  overflow: hidden;
+}
+
+.cat-chip {
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--primary-dim);
+  background: var(--accent-tint);
+  border: 1px solid var(--accent-tint-border);
+  white-space: nowrap;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.cat-chip.active,
+.cat-chip:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.btn-gold {
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-gold:hover:not(:disabled) {
+  background: var(--accent-bright);
+}
+
+.btn-outline {
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-weight: 500;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-outline:hover:not(:disabled) {
+  background: var(--accent-tint);
+}
+
+.eyebrow {
+  font-family: var(--font-body);
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.gold-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent) 50%, transparent);
+}
+
+.form-field {
+  background: var(--bg-elevated);
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.success-check {
+  width: 60px;
+  height: 60px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px 0 rgba(201, 169, 97, 0.4);
+}
+
+/* Legacy fallback for WebKit/Blink browsers without scrollbar-color */
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+/* Accessibility §4.2: Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+dialog::backdrop {
+  background: rgba(10, 9, 8, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  postgres-replica:
+    image: pgvector/pgvector:pg16
+    container_name: portal-postgres-replica
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: portal
+      POSTGRES_PASSWORD: portal
+      POSTGRES_DB: portal_estilo_luxo
+    command: >
+      postgres
+      -c hot_standby=on
+      -c wal_level=replica
+      -c max_wal_senders=3
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+
+  metabase:
+    image: metabase/metabase:latest
+    container_name: portal-metabase
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: portal_estilo_luxo
+      MB_DB_PORT: 5432
+      MB_DB_USER: portal
+      MB_DB_PASS: portal
+      MB_DB_HOST: postgres-replica
+    depends_on:
+      - postgres-replica
+
+volumes:
+  postgres_replica_data:

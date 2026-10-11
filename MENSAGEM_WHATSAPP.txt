@@ -1,0 +1,32 @@
+✨ *PORTAL ESTILO LUXO · LOJA MOBILE v1.0 (Protótipo Navegável p/ Revisão)* ✨
+
+Olá, time! Segue em anexo o protótipo interativo completo da *Loja Mobile v1.0 (Piloto Black Friday 2026)* para revisão de Produto, Design, Jurídico e Financeiro.
+
+📂 *Como abrir:*
+Basta baixar e tocar/clicar duas vezes no arquivo *Portal_Estilo_Luxo_Prototipo_WhatsApp.html* (abre direto no navegador do celular ou computador, sem precisar instalar nada).
+
+🧭 *Dica de navegação rápida:*
+No canto inferior direito da tela há o botão dourado *"Mapa 10 Fluxos"* para pular direto entre as 30 telas e no topo há o seletor de personas (*Marina KYC OK*, *Novo KYC* e *Bia Presente*) e de *Estado (UF)*.
+
+---
+✅ *O QUE VALIDAR NAS 3 JORNADAS:*
+
+1️⃣ *Jornada 1 · Compra Direta (Fluxos 01 a 06)*
+• *Vitrine & Filtros (F01/F02):* Curadoria Unicentro até R$ 250 (< US$ 45 FOB), modal de filtros com slider R$ 70–R$ 250, swatches de cor e Top 5 semanal.
+• *PDP (F03):* Imagem com Zoom 2x, 4 dots, specs (Tamanho/Peso/Origem Paraguai) e botão *"Comprar"* indo direto ao checkout.
+• *Sacola & Pix Split (F04):* Imposto Federal sempre *R$ 0,00 (Remessa Conforme)*, ICMS dinâmico por UF de entrega, QR Code Pix (15 min) com divisão automática (*Portal 20% · Unicentro · Epyx 5% · ICMS*) e simulador de confirmação instantânea + NF-e Bling.
+• *Pós-compra (F05):* Timeline Correios SRO-eXML de 5 etapas com pulse na etapa ativa e avaliação pós-entrega.
+• *Onboarding (F06):* Splash editorial full-bleed + Cadastro único no Banco Parceiro (CPF módulo 11 + ViaCEP <=500ms + fallback salvar sacola 24h).
+
+2️⃣ *Jornada 2 · Assistente de Estilo IA (Fluxo 08)*
+• *Chat + Drop Zone:* Envio de foto com sugestão de ocasião, processamento em SLA < 8s, descarte imediato da foto (LGPD), modo fallback de curadoria manual e 3 combos sugeridos (*LOOK 1 = MELHOR COMBO*).
+
+3️⃣ *Jornada 3 · Presente Compartilhado (Fluxo 09)*
+• *Visão da Amiga (Persona Bia):* Acesso pelo link compartilhado sem exigir cadastro prévio, barra de progresso, botão *"Eu pago esta peça"*, cadastro simplificado em 1 tela e fechamento automático do Pix Split (com fallback de 7 dias para a dona do look).
+
+4️⃣ *Extras do Piloto & Scale (Fluxos 07, 10, Design System & Lake IA)*
+• *Wishlist (F07):* Badges *"BAIXOU R$ 15"* e *"ÚLTIMAS 2"*, seção de Alertas Ativos e gráfico SVG de preço (30 dias).
+• *Moda ao Vivo (F10):* Live com Marina Ferraz, peça em destaque sincronizada, fileira de *"Próximos Destaques"* com countdown e reações flutuantes.
+• *Spec Figma (/design-system) & KPIs/Lake (/admin/analytics):* Os 145 tokens, 14 componentes reutilizáveis, 5 KPIs norteadores, 4 guardrails e previsão de demanda Prophet.
+
+Fico no aguardo dos feedbacks para o nosso Steering Committee! 🚀

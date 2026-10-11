@@ -1,0 +1,22 @@
+{
+  "name": "Portal Estilo Luxo · Curadoria Unicentro",
+  "short_name": "Portal Luxo",
+  "description": "Curadoria de acessórios de luxo até US$ 50 da Unicentro (Paraguai) para o Brasil com Pix Split e Remessa Conforme.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0908",
+  "theme_color": "#C9A961",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=192&q=80",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=512&q=80",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}

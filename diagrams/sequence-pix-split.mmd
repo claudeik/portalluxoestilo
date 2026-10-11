@@ -1,0 +1,24 @@
+sequenceDiagram
+  actor Cliente
+  participant Frontend as Frontend PWA
+  participant Backend as Fastify API
+  participant BancoParceiro as Banco Parceiro (Pix Split)
+  participant BullMQ as BullMQ Workers
+  participant Bling as ERP Bling (NF-e)
+  participant Correios as Correios (SRO/SIGEP)
+
+  Cliente->>Frontend: Clica "Gerar QR Code Pix"
+  Frontend->>Backend: POST /api/checkout/pix
+  Backend->>BancoParceiro: POST /v1/pix/charges (splits: Portal 20%, Unicentro, Epyx 5%, ICMS)
+  BancoParceiro-->>Backend: pixKey + qrCodeUrl + chargeId
+  Backend-->>Frontend: Retorna QR Pix (expira em 15m)
+  Cliente->>BancoParceiro: Paga Pix no app do banco
+  BancoParceiro->>Backend: POST /api/webhooks/pix (HMAC SHA-256)
+  Backend->>Backend: Valida timingSafeEqual + Order.status = PAID
+  par Emissão Fiscal e Etiqueta
+    Backend->>BullMQ: Enqueue erp-sync
+    BullMQ->>Bling: Cria Pedido + Emite NF-e + Gera Etiqueta
+    Bling->>Correios: Registra pré-postagem SIGEP (RR...PY)
+  and Notificação Tempo Real
+    Backend-->>Frontend: Atualiza status PAID + Redireciona Confirmação
+  end

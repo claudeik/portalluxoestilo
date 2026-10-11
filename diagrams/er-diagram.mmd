@@ -1,0 +1,16 @@
+erDiagram
+  Customer ||--o{ Address : has
+  Customer ||--o{ Order : places
+  Customer ||--o{ WishlistItem : saves
+  Customer ||--o{ SharedCart : owns
+  Customer ||--o{ Look : generates
+  Category ||--o{ Product : contains
+  Product ||--o{ ProductImage : displays
+  Product ||--|| Stock : tracks
+  Product ||--o{ OrderItem : ordered_in
+  Order ||--|{ OrderItem : includes
+  Order ||--|| PixPayment : paid_with
+  Order ||--o| Invoice : emits
+  Order ||--o| ShippingLabel : generates
+  Order ||--o| Tracking : tracked_by
+  Tracking ||--o{ TrackingEvent : records

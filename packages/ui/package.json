@@ -1,0 +1,19 @@
+{
+  "name": "@portal/ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.tsx",
+  "types": "./index.tsx",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.0",
+    "typescript": "^5.5.0"
+  }
+}

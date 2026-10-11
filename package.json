@@ -1,0 +1,36 @@
+{
+  "name": "portal-estilo-luxo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Portal Estilo Luxo — e-commerce mobile-first cross-border (PY→BR) com checkout Pix split",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "dev:web": "npm --workspace=@portal/web run dev",
+    "dev:api": "npm --workspace=@portal/api run dev",
+    "build": "turbo run build",
+    "build:web": "npm --workspace=@portal/web run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "db:migrate": "npm --workspace=@portal/api run db:migrate",
+    "db:push": "npm --workspace=@portal/api run db:push",
+    "db:seed": "npm --workspace=@portal/api run db:seed",
+    "db:studio": "npm --workspace=@portal/api run db:studio",
+    "db:generate": "npm --workspace=@portal/api run db:generate",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.0",
+    "turbo": "^2.0.0",
+    "typescript": "^5.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  },
+  "packageManager": "npm@11.12.1"
+}

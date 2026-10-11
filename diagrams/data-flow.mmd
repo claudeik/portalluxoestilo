@@ -1,0 +1,14 @@
+flowchart LR
+  subgraph CatalogoSync["Sync Catálogo & Estoque (Unicentro PY)"]
+    UNI["API Unicentro PY"] -->|"BullMQ 6h/4h"| API1["Backend Fastify"]
+    API1 --> PG1[("PostgreSQL 16 + pgvector")]
+    PG1 --> WEB1["PWA Mobile-First"]
+  end
+
+  subgraph OrderLifecycle["Ciclo de Vida do Pedido"]
+    CLI["Cliente BR"] --> WEB2["Checkout Pix Split"]
+    WEB2 --> API2["Webhook HMAC"]
+    API2 --> ERP["Bling ERP (NF-e)"]
+    ERP --> COR["Correios SRO-eXML"]
+    COR -->|"Sync 4h"| WEB2
+  end

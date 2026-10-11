@@ -1,0 +1,633 @@
+// apps/api/prisma/schema.prisma
+// Portal Estilo Luxo — Spec Técnico v2.4 (27 models operacionais + 4 models analíticos Postgres-as-Lake ADR-0009)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ════════════════════════════════════════════════════════════
+// CRM — Clientes
+// ════════════════════════════════════════════════════════════
+
+model Customer {
+  id                String             @id @default(cuid())
+  email             String             @unique
+  phone             String             @unique
+  cpf               String             @unique
+  fullName          String
+  passwordHash      String?
+  kycStatus         KycStatus          @default(PENDING)
+  kycExternalId     String?            // ID no banco parceiro
+  kycApprovedAt     DateTime?
+  addresses         Address[]
+  carts             Cart[]
+  orders            Order[]
+  wishlistItems     WishlistItem[]
+  sharedCarts       SharedCart[]       @relation("SharedCartOwner")
+  sharedCartInvites SharedCartInvite[]
+  looks             Look[]
+  reviews           Review[]
+  liveViews         LiveView[]
+  liveMessages      LiveMessage[]
+  mlSegment         MlCustomerSegment?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@index([email])
+  @@index([cpf])
+}
+
+enum KycStatus {
+  PENDING
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  customerId  String
+  customer    Customer @relation(fields: [customerId], references: [id])
+  label       String
+  zipCode     String
+  street      String
+  number      String
+  complement  String?
+  district    String
+  city        String
+  state       String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([customerId])
+}
+
+// ════════════════════════════════════════════════════════════
+// Catálogo
+// ════════════════════════════════════════════════════════════
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  sortOrder   Int       @default(0)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+}
+
+model Product {
+  id               String                @id @default(cuid())
+  slug             String                @unique
+  sku              String                @unique
+  unicentroId      String                @unique
+  categoryId       String
+  category         Category              @relation(fields: [categoryId], references: [id])
+  name             String
+  description      String
+  material         String?
+  dimensions       String?
+  weightGrams      Int?
+  careInstructions String?
+  originCity       String                @default("Encarnación")
+  fobPriceUsd      Decimal               @db.Decimal(10, 2)
+  compareAtBrl     Decimal?              @db.Decimal(10, 2)
+  ncmCode          String?               // NCM 8 dígitos (ADR-0009)
+  cestCode         String?               // CEST (ADR-0009)
+  embedding        Unsupported("vector(1536)")?
+  images           ProductImage[]
+  stock            Stock?
+  cartItems        CartItem[]
+  orderItems       OrderItem[]
+  wishlistItems    WishlistItem[]
+  sharedCartItems  SharedCartItem[]
+  reviews          Review[]
+  lookItems        LookItem[]
+  liveFeatured     LiveFeaturedProduct[]
+  demandForecasts  MlDemandForecast[]
+  status           ProductStatus         @default(ACTIVE)
+  isNew            Boolean               @default(false)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+  @@index([isNew])
+  @@index([ncmCode])
+}
+
+enum ProductStatus {
+  ACTIVE
+  DRAFT
+  ARCHIVED
+  OUT_OF_STOCK
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  url       String
+  altText   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model Stock {
+  productId    String   @id
+  product      Product  @relation(fields: [productId], references: [id])
+  quantity     Int      @default(0)
+  reserved     Int      @default(0)
+  lastSyncAt   DateTime @default(now())
+  unicentroRef String?
+
+  @@index([quantity])
+}
+
+// ════════════════════════════════════════════════════════════
+// Carrinho + Checkout + Pedidos
+// ════════════════════════════════════════════════════════════
+
+model Cart {
+  id              String     @id @default(cuid())
+  customerId      String?
+  customer        Customer?  @relation(fields: [customerId], references: [id])
+  items           CartItem[]
+  exchangeRate    Decimal    @db.Decimal(10, 4)
+  icmsRate        Decimal    @db.Decimal(5, 4)
+  shippingCostBrl Decimal    @db.Decimal(10, 2)
+  status          CartStatus @default(OPEN)
+  expiresAt       DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@index([customerId])
+}
+
+enum CartStatus {
+  OPEN
+  CHECKOUT
+  CONVERTED
+  EXPIRED
+  ABANDONED
+}
+
+model CartItem {
+  id           String   @id @default(cuid())
+  cartId       String
+  cart         Cart     @relation(fields: [cartId], references: [id])
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id])
+  quantity     Int      @default(1)
+  unitPriceBrl Decimal  @db.Decimal(10, 2)
+  createdAt    DateTime @default(now())
+
+  @@index([cartId])
+}
+
+model Order {
+  id                 String         @id @default(cuid())
+  orderNumber        String         @unique
+  customerId         String
+  customer           Customer       @relation(fields: [customerId], references: [id])
+  items              OrderItem[]
+  totalBrl           Decimal        @db.Decimal(10, 2)
+  subtotalBrl        Decimal        @db.Decimal(10, 2)
+  shippingBrl        Decimal        @db.Decimal(10, 2)
+  federalTaxBrl      Decimal        @db.Decimal(10, 2) // Sempre 0.00 (Remessa Conforme)
+  icmsBrl            Decimal        @db.Decimal(10, 2)
+  exchangeRate       Decimal        @db.Decimal(10, 4)
+  pixPayment         PixPayment?
+  shippingLabel      ShippingLabel?
+  invoice            Invoice?
+  tracking           Tracking?
+  mlAnomalies        MlAnomaly[]
+  status             OrderStatus    @default(PENDING_PAYMENT)
+  paidAt             DateTime?
+  shippedAt          DateTime?
+  deliveredAt        DateTime?
+  cancellationReason String?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([customerId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PREPARING
+  SHIPPED
+  IN_CUSTOMS
+  DELIVERED
+  CANCELED
+  REFUNDED
+}
+
+model OrderItem {
+  id           String  @id @default(cuid())
+  orderId      String
+  order        Order   @relation(fields: [orderId], references: [id])
+  productId    String
+  product      Product @relation(fields: [productId], references: [id])
+  quantity     Int
+  unitPriceBrl Decimal @db.Decimal(10, 2)
+  totalBrl     Decimal @db.Decimal(10, 2)
+
+  @@index([orderId])
+}
+
+model PixPayment {
+  id                String    @id @default(cuid())
+  orderId           String    @unique
+  order             Order     @relation(fields: [orderId], references: [id])
+  pixKey            String
+  qrCodeUrl         String
+  externalId        String
+  splitId           String?
+  amountBrl         Decimal   @db.Decimal(10, 2)
+  status            PixStatus @default(GENERATED)
+  paidAt            DateTime?
+  webhookReceivedAt DateTime?
+  expiresAt         DateTime
+  createdAt         DateTime  @default(now())
+
+  @@index([status])
+}
+
+enum PixStatus {
+  GENERATED
+  PAID
+  EXPIRED
+  FAILED
+}
+
+model Invoice {
+  id                String        @id @default(cuid())
+  orderId           String        @unique
+  order             Order         @relation(fields: [orderId], references: [id])
+  erpType           ErpType
+  erpId             String
+  number            String
+  key               String
+  pdfUrl            String?
+  status            InvoiceStatus
+  emittedAt         DateTime?
+  xmlContent        Json?         @db.JsonB
+  parsedNcm         String?
+  parsedCfop        String?
+  parsedEmitterCnpj String?
+  embedding         Unsupported("vector(1536)")?
+  mlAnomalies       MlAnomaly[]
+  createdAt         DateTime      @default(now())
+
+  @@index([parsedNcm])
+  @@index([parsedCfop])
+  @@index([emittedAt])
+}
+
+enum ErpType {
+  BLING
+  SAMKYA
+}
+
+enum InvoiceStatus {
+  PENDING
+  EMITTED
+  CANCELED
+}
+
+model ShippingLabel {
+  id           String   @id @default(cuid())
+  orderId      String   @unique
+  order        Order    @relation(fields: [orderId], references: [id])
+  trackingCode String
+  labelUrl     String?
+  serviceCode  String
+  createdAt    DateTime @default(now())
+}
+
+model Tracking {
+  id           String          @id @default(cuid())
+  orderId      String          @unique
+  order        Order           @relation(fields: [orderId], references: [id])
+  events       TrackingEvent[]
+  lastEvent    String?
+  lastUpdateAt DateTime?
+  createdAt    DateTime        @default(now())
+}
+
+model TrackingEvent {
+  id         String   @id @default(cuid())
+  trackingId String
+  tracking   Tracking @relation(fields: [trackingId], references: [id])
+  status     String
+  location   String?
+  occurredAt DateTime
+  receivedAt DateTime @default(now())
+
+  @@index([trackingId])
+}
+
+// ════════════════════════════════════════════════════════════
+// Wishlist + Alertas
+// ════════════════════════════════════════════════════════════
+
+model WishlistItem {
+  id                String   @id @default(cuid())
+  customerId        String
+  customer          Customer @relation(fields: [customerId], references: [id])
+  productId         String
+  product           Product  @relation(fields: [productId], references: [id])
+  priceWhenAdded    Decimal  @db.Decimal(10, 2)
+  notifyOnPriceDrop Boolean  @default(true)
+  notifyOnLowStock  Boolean  @default(true)
+  createdAt         DateTime @default(now())
+
+  @@unique([customerId, productId])
+  @@index([customerId])
+}
+
+// ════════════════════════════════════════════════════════════
+// Carrinho compartilhado (presente)
+// ════════════════════════════════════════════════════════════
+
+model SharedCart {
+  id               String             @id @default(cuid())
+  token            String             @unique
+  ownerId          String
+  owner            Customer           @relation("SharedCartOwner", fields: [ownerId], references: [id])
+  title            String
+  items            SharedCartItem[]
+  invites          SharedCartInvite[]
+  totalContributed Decimal            @default(0) @db.Decimal(10, 2)
+  status           SharedCartStatus   @default(OPEN)
+  expiresAt        DateTime
+  createdAt        DateTime           @default(now())
+
+  @@index([ownerId])
+  @@index([status])
+}
+
+enum SharedCartStatus {
+  OPEN
+  COMPLETED
+  EXPIRED
+  CANCELED
+}
+
+model SharedCartItem {
+  id            String     @id @default(cuid())
+  sharedCartId  String
+  sharedCart    SharedCart @relation(fields: [sharedCartId], references: [id])
+  productId     String
+  product       Product    @relation(fields: [productId], references: [id])
+  unitPriceBrl  Decimal    @db.Decimal(10, 2)
+  contributedBy String?
+  contributedAt DateTime?
+  pixPaymentId  String?
+
+  @@index([sharedCartId])
+}
+
+model SharedCartInvite {
+  id           String       @id @default(cuid())
+  sharedCartId String
+  sharedCart   SharedCart   @relation(fields: [sharedCartId], references: [id])
+  email        String
+  customerId   String?
+  customer     Customer?    @relation(fields: [customerId], references: [id])
+  status       InviteStatus @default(PENDING)
+  viewedAt     DateTime?
+  acceptedAt   DateTime?
+  createdAt    DateTime     @default(now())
+
+  @@index([sharedCartId])
+}
+
+enum InviteStatus {
+  PENDING
+  VIEWED
+  ACCEPTED
+  DECLINED
+  EXPIRED
+}
+
+// ════════════════════════════════════════════════════════════
+// Assistente IA — Looks
+// ════════════════════════════════════════════════════════════
+
+model Look {
+  id          String     @id @default(cuid())
+  customerId  String
+  customer    Customer   @relation(fields: [customerId], references: [id])
+  photoUrl    String
+  photoTags   String[]
+  items       LookItem[]
+  rank        Int
+  isBestCombo Boolean    @default(false)
+  purchasedAt DateTime?
+  createdAt   DateTime   @default(now())
+
+  @@index([customerId])
+}
+
+model LookItem {
+  id        String  @id @default(cuid())
+  lookId    String
+  look      Look    @relation(fields: [lookId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  sortOrder Int     @default(0)
+
+  @@index([lookId])
+}
+
+// ════════════════════════════════════════════════════════════
+// Live Shopping
+// ════════════════════════════════════════════════════════════
+
+model Live {
+  id               String                @id @default(cuid())
+  title            String
+  curatorName      String
+  curatorAvatarUrl String?
+  streamKey        String
+  playbackId       String
+  status           LiveStatus            @default(SCHEDULED)
+  scheduledAt      DateTime
+  startedAt        DateTime?
+  endedAt          DateTime?
+  featuredProducts LiveFeaturedProduct[]
+  messages         LiveMessage[]
+  views            LiveView[]
+  replayUrl        String?
+  createdAt        DateTime              @default(now())
+
+  @@index([status])
+  @@index([scheduledAt])
+}
+
+enum LiveStatus {
+  SCHEDULED
+  LIVE
+  ENDED
+}
+
+model LiveFeaturedProduct {
+  id         String    @id @default(cuid())
+  liveId     String
+  live       Live      @relation(fields: [liveId], references: [id])
+  productId  String
+  product    Product   @relation(fields: [productId], references: [id])
+  sortOrder  Int       @default(0)
+  featuredAt DateTime?
+
+  @@index([liveId])
+}
+
+model LiveMessage {
+  id         String    @id @default(cuid())
+  liveId     String
+  live       Live      @relation(fields: [liveId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+  authorName String
+  text       String
+  isHost     Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+
+  @@index([liveId])
+}
+
+model LiveView {
+  liveId     String
+  live       Live     @relation(fields: [liveId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  joinedAt   DateTime @default(now())
+  leftAt     DateTime?
+
+  @@id([liveId, customerId, joinedAt])
+}
+
+// ════════════════════════════════════════════════════════════
+// Reviews
+// ════════════════════════════════════════════════════════════
+
+model Review {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  customerId String
+  customer   Customer @relation(fields: [customerId], references: [id])
+  orderId    String
+  rating     Int
+  title      String?
+  body       String
+  tags       String[]
+  imageUrl   String?
+  isApproved Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([productId])
+  @@index([customerId])
+}
+
+// ════════════════════════════════════════════════════════════
+// Audit log (LGPD)
+// ════════════════════════════════════════════════════════════
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actor     String
+  action    String
+  resource  String
+  metadata  Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([actor])
+  @@index([action])
+  @@index([createdAt])
+}
+
+// ════════════════════════════════════════════════════════════
+// Parte III — Postgres-as-Lake + Jobs de IA (ADR-0009 · §28.3)
+// ════════════════════════════════════════════════════════════
+
+model MlAnomaly {
+  id           String    @id @default(cuid())
+  invoiceId    String?
+  invoice      Invoice?  @relation(fields: [invoiceId], references: [id])
+  orderId      String?
+  order        Order?    @relation(fields: [orderId], references: [id])
+  type         String    // "FISCAL_ANOMALY", "FRAUD_PATTERN", "PRICE_OUTLIER"
+  severity     String    // "LOW", "MEDIUM", "HIGH", "CRITICAL"
+  score        Float
+  description  String
+  metadata     Json?     @db.JsonB
+  resolvedAt   DateTime?
+  resolvedBy   String?
+  resolvedNote String?
+  createdAt    DateTime  @default(now())
+
+  @@index([type, severity])
+  @@index([createdAt])
+  @@index([resolvedAt])
+}
+
+model MlDemandForecast {
+  id             String   @id @default(cuid())
+  productId      String
+  product        Product  @relation(fields: [productId], references: [id])
+  forecastMonth  DateTime
+  predictedQty   Int
+  confidenceLow  Int
+  confidenceHigh Int
+  model          String   // "prophet", "arima", "linear"
+  createdAt      DateTime @default(now())
+
+  @@unique([productId, forecastMonth, model])
+  @@index([forecastMonth])
+}
+
+model MlCustomerSegment {
+  id             String   @id @default(cuid())
+  customerId     String   @unique
+  customer       Customer @relation(fields: [customerId], references: [id])
+  segment        String   // "CHAMPION", "LOYAL", "POTENTIAL", "AT_RISK", "LOST"
+  recencyDays    Int
+  frequencyCount Int
+  monetaryBrl    Decimal  @db.Decimal(10, 2)
+  score          Int
+  updatedAt      DateTime @default(now())
+
+  @@index([segment])
+  @@index([score])
+}
+
+model MlJobRun {
+  id               String    @id @default(cuid())
+  jobName          String
+  status           String    // "RUNNING", "SUCCESS", "FAILED", "SKIPPED"
+  startedAt        DateTime
+  finishedAt       DateTime?
+  recordsProcessed Int       @default(0)
+  recordsAffected  Int       @default(0)
+  errorMessage     String?
+  metadata         Json?     @db.JsonB
+
+  @@index([jobName, startedAt])
+  @@index([status])
+}

@@ -1,0 +1,20 @@
+sequenceDiagram
+  autonumber
+  participant Backend as Fastify API
+  participant BullMQ as BullMQ (erp-sync)
+  participant Bling as ERP Bling v3
+  participant SEFAZ as SEFAZ Estadual
+  participant Correios as Correios SIGEP
+  participant Unicentro as Unicentro (Encarnación PY)
+
+  Backend->>BullMQ: Enqueue erp-sync (Order PAID)
+  BullMQ->>Bling: POST /v3/pedidos/vendas
+  Bling-->>BullMQ: Retorna pedidoId
+  BullMQ->>Bling: POST /v3/nf-e (modelo 55)
+  Bling->>SEFAZ: Transmite XML NF-e
+  SEFAZ-->>Bling: Autoriza uso (chave 44 dígitos + DANFE)
+  Bling-->>BullMQ: NF-e EMITTED
+  BullMQ->>Bling: POST /v3/etiquetas/correios (PAC 03298)
+  Bling->>Correios: Solicita código internacional RR...PY
+  Correios-->>Bling: Etiqueta + trackingCode
+  BullMQ->>Unicentro: Notifica separação do pacote c/ DANFE + Etiqueta
