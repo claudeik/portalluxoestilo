@@ -2,6 +2,7 @@ node_modules/
 dist/
 build/
 .turbo/
+.vercel/
 .env
 .env.local
 coverage/
@@ -9,3 +10,4 @@ coverage/
 .DS_Store
 playwright-report/
 test-results/
+.vercel
