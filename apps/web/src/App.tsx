@@ -1,10 +1,10 @@
 // apps/web/src/App.tsx
-// Roteador principal React Router v6 cobrindo os 10 Fluxos (30 telas), Design System v1.0 e Dashboard Analítico §28
-// Suporta BrowserRouter (servidor web) e HashRouter automático quando aberto como arquivo único (.html via WhatsApp)
+// Portal Estilo Luxo · Roteador Principal React Router v6 (Volume I · Pitch Editorial)
+// Vitrine, 14 Mockups do Estudo, Pitch Editorial, E-mail Revista, Design System e Rastreio Correios
 
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, HashRouter, Routes, Route, useLocation, Link } from "react-router-dom";
-import { Compass, X } from "lucide-react";
+import { Compass, X, Sparkles, BookOpen } from "lucide-react";
 import { Header } from "./components/layout/Header";
 import { TabBar } from "./components/layout/TabBar";
 import {
@@ -41,6 +41,9 @@ import {
   AnalyticsDashboardPage,
 } from "./routes/ExperiencePages";
 import { DesignSystemPage } from "./routes/DesignSystemPage";
+import { CrmPage } from "./routes/CrmPage";
+import { PitchEditorialPage } from "./routes/PitchEditorialPage";
+import { NewsletterPage } from "./routes/NewsletterPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -55,34 +58,35 @@ function QuickReviewFloatingMenu() {
   const location = useLocation();
 
   const shortcuts = [
-    { code: "F01", label: "Vitrine Home", path: "/" },
-    { code: "F02", label: "Top 5 & Filtros", path: "/mais-vendidos" },
-    { code: "F03", label: "PDP Produto (Zoom 2x)", path: "/produto/lenco-seda-riviera-esmeralda" },
-    { code: "F04", label: "Sacola & ICMS Dinâmico", path: "/carrinho" },
-    { code: "F04b", label: "Checkout QR Pix Split", path: "/checkout" },
-    { code: "F05", label: "Rastreio Correios 5 Etapas", path: "/conta/pedidos/PEL-2026-0842" },
-    { code: "F06", label: "Splash Editorial", path: "/boas-vindas" },
-    { code: "F06b", label: "Cadastro KYC Banco", path: "/cadastro" },
-    { code: "F07", label: "Wishlist + Gráfico SVG", path: "/conta/desejos" },
-    { code: "F08", label: "Assistente IA (Foto)", path: "/conta/assistente" },
-    { code: "F09", label: "Presente Amiga (Bia)", path: "/s/aniversario-marina-2026" },
-    { code: "F10", label: "Live Marina Ferraz", path: "/live/quinta-luxo" },
-    { code: "DS", label: "Spec Figma (14 Comp.)", path: "/design-system" },
-    { code: "KPI", label: "KPIs & IA Lake (§28)", path: "/admin/analytics" },
+    { code: "PITCH", label: "Tese & Estudo Completo", path: "/estudo" },
+    { code: "M01", label: "01 · Home Editorial", path: "/" },
+    { code: "M02", label: "02 · Categoria & Filtros", path: "/categoria/lencos" },
+    { code: "M04", label: "04 · PDP Lenço R$ 110", path: "/produto/lenco-estampado-floral" },
+    { code: "M05", label: "05 · Sacola & Pré-resumo", path: "/carrinho" },
+    { code: "M06", label: "06 · Resumo Transparente", path: "/checkout" },
+    { code: "M09", label: "09 · Confirmação Split", path: "/pedido-confirmado/PRT-2026-0847" },
+    { code: "M10", label: "10 · Minha Conta", path: "/conta" },
+    { code: "M11", label: "11 · Meus Favoritos", path: "/conta/desejos" },
+    { code: "M12", label: "12 · E-mail Revista", path: "/newsletter" },
+    { code: "M13", label: "13 · Tracking Correios (6 Etapas)", path: "/conta/pedidos/PRT-2026-0847" },
+    { code: "IA", label: "Assistente Visual IA", path: "/conta/assistente" },
+    { code: "GIFT", label: "Presente Split (Bia)", path: "/s/aniversario-marina-2026" },
+    { code: "LIVE", label: "Live Shopping", path: "/live/quinta-luxo" },
+    { code: "DS", label: "Design System & Tokens", path: "/design-system" },
   ];
 
   return (
     <div className="fixed bottom-20 right-4 z-50">
       {open ? (
-        <div className="bg-[#14110E]/95 backdrop-blur-xl border border-[#C9A961] rounded-2xl p-3.5 w-72 shadow-2xl space-y-2.5">
-          <div className="flex items-center justify-between border-b border-[#2A2520] pb-2">
-            <span className="text-[10px] font-mono uppercase tracking-wider text-[#C9A961] font-bold">
-              Navegador de Revisão (10 Fluxos)
+        <div className="bg-[#0A0A0A]/95 text-[#FAF7F2] backdrop-blur-xl border border-[#B8924A] rounded-2xl p-3.5 w-72 shadow-2xl space-y-2.5">
+          <div className="flex items-center justify-between border-b border-[#2C2C2C] pb-2">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#D9BE85] font-bold">
+              Navegador do Estudo (14 Telas)
             </span>
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="text-[#8A8278] hover:text-[#F5EFE6]"
+              className="text-[#8C8275] hover:text-[#FAF7F2]"
             >
               <X className="w-4 h-4" />
             </button>
@@ -97,14 +101,14 @@ function QuickReviewFloatingMenu() {
                   onClick={() => setOpen(false)}
                   className={`flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs transition ${
                     active
-                      ? "bg-[#C9A961] text-[#0A0908] font-bold"
-                      : "text-[#F5EFE6] hover:bg-[#1C1814]"
+                      ? "bg-[#B8924A] text-[#0A0A0A] font-bold"
+                      : "text-[#FAF7F2] hover:bg-[#1C1814]"
                   }`}
                 >
-                  <span>{s.label}</span>
+                  <span className="truncate">{s.label}</span>
                   <span
-                    className={`font-mono text-[10px] ${
-                      active ? "text-[#0A0908]" : "text-[#4FC3F7]"
+                    className={`font-mono text-[9px] ml-2 ${
+                      active ? "text-[#0A0A0A]" : "text-[#D9BE85]"
                     }`}
                   >
                     {s.code}
@@ -118,73 +122,90 @@ function QuickReviewFloatingMenu() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-[#14110E]/95 border border-[#C9A961] text-[#C9A961] text-xs font-semibold shadow-2xl hover:bg-[#C9A961] hover:text-[#0A0908] transition"
+          className="p-3 rounded-full bg-[#0A0A0A] text-[#D9BE85] border border-[#B8924A] shadow-2xl hover:scale-105 transition flex items-center gap-2"
+          title="Abrir navegador de telas"
         >
-          <Compass className="w-4 h-4" />
-          <span>Mapa 10 Fluxos</span>
+          <Compass className="w-5 h-5 text-[#B8924A]" />
+          <span className="text-xs font-semibold hidden sm:inline text-[#FAF7F2]">Navegar Telas</span>
         </button>
       )}
     </div>
   );
 }
 
-const Router =
-  typeof window !== "undefined" && window.location.protocol === "file:"
-    ? HashRouter
-    : BrowserRouter;
-
-export function App() {
+export function AppRoutes() {
   return (
-    <Router>
+    <div className="min-h-screen bg-[#FAF7F2] dark:bg-[#0A0908] text-[#0A0A0A] dark:text-[#FAF7F2] transition-colors">
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-[#0A0908] text-[#F5EFE6]">
-        <Header />
-        <main className="flex-1">
-          <Routes>
-            {/* Design System & Figma Spec (Slides 01-12) */}
-            <Route path="/design-system" element={<DesignSystemPage />} />
+      <Header />
+      <main className="min-h-[calc(100vh-140px)]">
+        <Routes>
+          {/* Rotas Principais do Estudo */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/categoria/:slug" element={<CategoryPage />} />
+          <Route path="/produto/:slug" element={<ProductPage />} />
+          <Route path="/busca" element={<SearchPage />} />
+          <Route path="/mais-vendidos" element={<RankingPage />} />
+          <Route path="/novidades" element={<NewPage />} />
 
-            {/* Públicas (Flow 01, 02, 03, 04, 09, 10) */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/busca" element={<SearchPage />} />
-            <Route path="/catalogo/:category" element={<CategoryPage />} />
-            <Route path="/produto/:slug" element={<ProductPage />} />
-            <Route path="/mais-vendidos" element={<RankingPage />} />
-            <Route path="/novidades" element={<NewPage />} />
-            <Route path="/carrinho" element={<CartPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/checkout/confirmacao/:orderId" element={<OrderConfirmPage />} />
-            <Route path="/live/:id" element={<LivePage />} />
-            <Route path="/s/:token" element={<SharedCartPage />} />
+          {/* Carrinho, Checkout & Pix */}
+          <Route path="/carrinho" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/pedido-confirmado/:id" element={<OrderConfirmPage />} />
+          <Route path="/cadastro" element={<OnboardingPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/boas-vindas" element={<WelcomeSplashPage />} />
+          <Route path="/onboarding-sucesso" element={<OnboardingSuccessPage />} />
 
-            {/* Autenticação, Welcome Splash & Onboarding KYC Banco Parceiro (Flow 06) */}
-            <Route path="/boas-vindas" element={<WelcomeSplashPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/cadastro" element={<OnboardingPage />} />
-            <Route path="/cadastro/sucesso" element={<OnboardingSuccessPage />} />
+          {/* Pós-Compra & Conta */}
+          <Route path="/conta" element={<ProfilePage />} />
+          <Route path="/conta/pedidos" element={<OrdersPage />} />
+          <Route path="/conta/pedidos/:id" element={<OrderDetailPage />} />
+          <Route path="/conta/desejos" element={<WishlistPage />} />
+          <Route path="/conta/desejos/:id" element={<WishlistDetailPage />} />
+          <Route path="/conta/alertas" element={<AlertsPage />} />
+          <Route path="/conta/enderecos" element={<AddressesPage />} />
 
-            {/* Conta, Pós-Compra, Wishlist c/ Gráfico SVG e IA (Flow 05, 07, 08, 09) */}
-            <Route path="/conta" element={<ProfilePage />} />
-            <Route path="/conta/pedidos" element={<OrdersPage />} />
-            <Route path="/conta/pedidos/:id" element={<OrderDetailPage />} />
-            <Route path="/conta/desejos" element={<WishlistPage />} />
-            <Route path="/conta/desejos/:productId" element={<WishlistDetailPage />} />
-            <Route path="/conta/alertas" element={<AlertsPage />} />
-            <Route path="/conta/assistente" element={<AssistantPage />} />
-            <Route path="/conta/assistente/:lookId" element={<AssistantPage />} />
-            <Route path="/conta/enderecos" element={<AddressesPage />} />
-            <Route path="/conta/Enderecos" element={<AddressesPage />} />
-            <Route path="/conta/compartilhar" element={<SharedCartCreatePage />} />
+          {/* Estudo Estratégico & Newsletter Revista */}
+          <Route path="/estudo" element={<PitchEditorialPage />} />
+          <Route path="/newsletter" element={<NewsletterPage />} />
 
-            {/* Analytics & Steering Committee (Spec §28 + Brief §5) */}
-            <Route path="/admin/analytics" element={<AnalyticsDashboardPage />} />
-          </Routes>
-        </main>
-        <QuickReviewFloatingMenu />
-        <TabBar />
-      </div>
-    </Router>
+          {/* Experiências Avançadas */}
+          <Route path="/conta/assistente" element={<AssistantPage />} />
+          <Route path="/s/:token" element={<SharedCartPage />} />
+          <Route path="/compartilhar" element={<SharedCartCreatePage />} />
+          <Route path="/live/:slug" element={<LivePage />} />
+
+          {/* Gestão, Analytics & Design System */}
+          <Route path="/design-system" element={<DesignSystemPage />} />
+          <Route path="/admin/analytics" element={<AnalyticsDashboardPage />} />
+          <Route path="/admin/crm" element={<CrmPage />} />
+
+          <Route path="*" element={<HomePage />} />
+        </Routes>
+      </main>
+      <QuickReviewFloatingMenu />
+      <TabBar />
+    </div>
   );
 }
 
-export default App;
+export default function App() {
+  const isHashRouting =
+    typeof window !== "undefined" &&
+    (window.location.protocol === "file:" || window.location.hash.startsWith("#/"));
+
+  if (isHashRouting) {
+    return (
+      <HashRouter>
+        <AppRoutes />
+      </HashRouter>
+    );
+  }
+
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+}

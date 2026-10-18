@@ -1,0 +1,465 @@
+/* Scoped Styles for Gothan CRM inside Portal Estilo Luxo */
+
+.gothan-crm-root {
+  --crm-bg-color: #f6f8fa;
+  --crm-sidebar-bg: #ffffff;
+  --crm-card-bg: #ffffff;
+  --crm-text-primary: #1f2937;
+  --crm-text-secondary: #6b7280;
+  --crm-border-color: #e5e7eb;
+  --crm-accent-blue: #3b82f6;
+  --crm-accent-blue-hover: #2563eb;
+  --crm-column-bg: #f8fafc;
+  
+  --crm-priority-high-bg: #fee2e2;
+  --crm-priority-high-text: #ef4444;
+  --crm-priority-medium-bg: #fef3c7;
+  --crm-priority-medium-text: #f59e0b;
+  --crm-priority-low-bg: #e0f2fe;
+  --crm-priority-low-text: #3b82f6;
+
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  display: flex;
+  background-color: var(--crm-bg-color);
+  color: var(--crm-text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  overflow: hidden;
+}
+
+.gothan-crm-root.dark {
+  --crm-bg-color: #111827;
+  --crm-sidebar-bg: #1f2937;
+  --crm-card-bg: #1f2937;
+  --crm-text-primary: #f3f4f6;
+  --crm-text-secondary: #9ca3af;
+  --crm-border-color: #374151;
+  --crm-accent-blue: #60a5fa;
+  --crm-accent-blue-hover: #3b82f6;
+  --crm-column-bg: #1a2332;
+
+  --crm-priority-high-bg: #451a1a;
+  --crm-priority-high-text: #f87171;
+  --crm-priority-medium-bg: #452a1a;
+  --crm-priority-medium-text: #fbbf24;
+  --crm-priority-low-bg: #1a2a45;
+  --crm-priority-low-text: #60a5fa;
+}
+
+/* Sidebar */
+.gothan-crm-root .crm-sidebar {
+  width: 260px;
+  background-color: var(--crm-sidebar-bg);
+  border-right: 1px solid var(--crm-border-color);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.gothan-crm-root .crm-sidebar-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--crm-border-color);
+}
+
+.gothan-crm-root .crm-logo-placeholder {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gothan-crm-root .crm-nav-links {
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.gothan-crm-root .crm-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  color: var(--crm-text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.gothan-crm-root .crm-nav-item:hover {
+  background-color: var(--crm-bg-color);
+  color: var(--crm-text-primary);
+}
+
+.gothan-crm-root .crm-nav-item.active {
+  background-color: #eff6ff;
+  color: var(--crm-accent-blue);
+}
+
+.gothan-crm-root.dark .crm-nav-item.active {
+  background-color: #1e3a8a;
+  color: #93c5fd;
+}
+
+/* Main Content */
+.gothan-crm-root .crm-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gothan-crm-root .crm-content-area {
+  flex: 1;
+  padding: 28px 32px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+/* Buttons */
+.gothan-crm-root .crm-btn-primary {
+  background-color: var(--crm-accent-blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.875rem;
+}
+
+.gothan-crm-root .crm-btn-primary:hover {
+  background-color: var(--crm-accent-blue-hover);
+}
+
+.gothan-crm-root .crm-btn-secondary {
+  background-color: var(--crm-card-bg);
+  color: var(--crm-text-primary);
+  border: 1px solid var(--crm-border-color);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.875rem;
+}
+
+.gothan-crm-root .crm-btn-secondary:hover {
+  background-color: var(--crm-column-bg);
+}
+
+.gothan-crm-root .crm-view-toggle {
+  display: flex;
+  background-color: var(--crm-bg-color);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--crm-border-color);
+}
+
+.gothan-crm-root .crm-toggle-btn {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  color: var(--crm-text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.gothan-crm-root .crm-toggle-btn.active {
+  background-color: var(--crm-card-bg);
+  color: var(--crm-text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Kanban Board */
+.gothan-crm-root .crm-kanban-board {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  min-height: 100%;
+}
+
+.gothan-crm-root .crm-kanban-column {
+  min-width: 310px;
+  width: 310px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 8px 4px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.gothan-crm-root .crm-kanban-column.drag-over {
+  background-color: #eff6ff;
+  outline: 2px dashed var(--crm-accent-blue);
+}
+
+.gothan-crm-root.dark .crm-kanban-column.drag-over {
+  background-color: #1e293b;
+  outline: 2px dashed var(--crm-accent-blue);
+}
+
+.gothan-crm-root .crm-column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 2px;
+}
+
+.gothan-crm-root .crm-task-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* CRM Card */
+.gothan-crm-root .crm-card {
+  background-color: var(--crm-card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+  transition: all 0.2s ease;
+  cursor: grab;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  border: 1px solid var(--crm-border-color);
+  position: relative;
+}
+
+.gothan-crm-root .crm-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-color: #cbd5e1;
+}
+
+.gothan-crm-root.dark .crm-card:hover {
+  border-color: #4b5563;
+}
+
+.gothan-crm-root .crm-card.selected {
+  border-color: var(--crm-accent-blue);
+  background-color: #f8fbff;
+}
+
+.gothan-crm-root.dark .crm-card.selected {
+  background-color: #1e293b;
+  border-color: var(--crm-accent-blue);
+}
+
+.gothan-crm-root .crm-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: white;
+  flex-shrink: 0;
+}
+
+.gothan-crm-root.dark .crm-checkbox {
+  background: var(--crm-card-bg);
+  border-color: var(--crm-border-color);
+}
+
+.gothan-crm-root .crm-checkbox.checked {
+  background-color: var(--crm-accent-blue);
+  border-color: var(--crm-accent-blue);
+}
+
+.gothan-crm-root .crm-avatar-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.gothan-crm-root .crm-avatar-text {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #e0e7ff;
+  color: #4f46e5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+.gothan-crm-root.dark .crm-avatar-text {
+  background-color: #312e81;
+  color: #a5b4fc;
+}
+
+.gothan-crm-root .crm-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-left: 32px;
+}
+
+.gothan-crm-root .crm-detail-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--crm-text-secondary);
+  font-size: 0.85rem;
+}
+
+.gothan-crm-root .crm-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.gothan-crm-root .crm-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  margin-left: 32px;
+  color: #9ca3af;
+}
+
+.gothan-crm-root .crm-flag-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background-color: #fee2e2;
+  border-radius: 50%;
+  animation: popIn 0.2s ease-out;
+}
+
+.gothan-crm-root.dark .crm-flag-icon {
+  background-color: #7f1d1d;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  80% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* List View */
+.gothan-crm-root .crm-list-view {
+  background-color: var(--crm-card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--crm-border-color);
+  overflow: hidden;
+}
+
+.gothan-crm-root .crm-list-header {
+  display: grid;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--crm-border-color);
+  background-color: var(--crm-column-bg);
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--crm-text-secondary);
+}
+
+.gothan-crm-root .crm-list-row {
+  display: grid;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--crm-border-color);
+  align-items: center;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.gothan-crm-root .crm-list-row:hover {
+  background-color: var(--crm-column-bg);
+}
+
+.gothan-crm-root .crm-list-row:last-child {
+  border-bottom: none;
+}
+
+/* Modal */
+.gothan-crm-root .crm-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.gothan-crm-root .crm-modal-content {
+  background: var(--crm-card-bg);
+  color: var(--crm-text-primary);
+  border-radius: 12px;
+  padding: 28px;
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--crm-border-color);
+}
+
+.gothan-crm-root .crm-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gothan-crm-root .crm-form-field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--crm-text-secondary);
+}
+
+.gothan-crm-root .crm-form-field input,
+.gothan-crm-root .crm-form-field select {
+  padding: 8px 12px;
+  border: 1px solid var(--crm-border-color);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background-color: var(--crm-bg-color);
+  color: var(--crm-text-primary);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.gothan-crm-root .crm-form-field input:focus,
+.gothan-crm-root .crm-form-field select:focus {
+  border-color: var(--crm-accent-blue);
+}

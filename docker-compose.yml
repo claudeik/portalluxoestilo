@@ -47,6 +47,25 @@ services:
     volumes:
       - minio_data:/data
 
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.5
+    container_name: portal-keycloak
+    command: start-dev --import-realm
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/portal_estilo_luxo
+      KC_DB_USERNAME: portal
+      KC_DB_PASSWORD: portal
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./docs/keycloak-realm.json:/opt/keycloak/data/import/keycloak-realm.json
+
 volumes:
   postgres_data:
   redis_data:

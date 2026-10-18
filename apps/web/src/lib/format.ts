@@ -1,5 +1,5 @@
 // apps/web/src/lib/format.ts
-// Utilitários de moeda (BRL/USD), CPF, CEP, ICMS "por dentro" e Pix Split (Spec §§9, 13, 27)
+// Utilitários de moeda (BRL/USD), CPF, CEP, ICMS "por dentro" e Pix Split (Volume I · Pitch Editorial)
 
 import { CheckoutQuote } from "@portal/types";
 
@@ -29,7 +29,7 @@ export const ICMS_RATES: Record<string, number> = {
   RS: 0.17,
   SC: 0.17,
   SE: 0.19,
-  SP: 0.17, // Default técnico do Piloto (Product Brief §7)
+  SP: 0.17, // Alíquota de referência do estudo
   TO: 0.20,
 };
 
@@ -59,21 +59,26 @@ export function calculateQuote(params: {
   const exchangeRate = params.exchangeRate ?? 5.0;
 
   // Regra de frete Correios PAC Internacional / Remessa Conforme
-  const shippingBrl = params.subtotalBrl === 0 ? 0 : ["SP", "RJ", "MG", "PR", "SC", "RS"].includes(state) ? 25.0 : 32.0;
+  const shippingBrl = params.subtotalBrl === 0 ? 0 : 25.0;
 
-  // Fórmula ICMS "por dentro" (Spec §13.3): subtotalBrl - (subtotalBrl / (1 + icmsRate))
+  // Fórmula oficial ICMS "por dentro" sobre (mercadoria + frete)
+  // Exemplo do pitch: (110 + 25) / (1 - 0.17) - 135 = R$ 27,65
+  const baseComFrete = params.subtotalBrl + shippingBrl;
   const icmsBrl =
     params.subtotalBrl === 0
       ? 0
-      : Number((params.subtotalBrl - params.subtotalBrl / (1 + icmsRate)).toFixed(2));
+      : Number((baseComFrete / (1 - icmsRate) - baseComFrete).toFixed(2));
 
   // Imposto de Importação Federal = R$ 0,00 (Remessa Conforme certificada Unicentro < US$ 50 FOB)
   const federalTaxBrl = 0.0;
-  const totalBrl = Number((params.subtotalBrl + shippingBrl + icmsBrl + federalTaxBrl).toFixed(2));
+  const totalBrl = Number((baseComFrete + icmsBrl + federalTaxBrl).toFixed(2));
 
-  // Split Pix regulado pelo Banco Parceiro (Spec §9.2):
-  // Portal 20% comissão | Epyx 5% plataforma | Tributos ICMS | Unicentro restante
-  const portalBrl = Number((totalBrl * 0.20).toFixed(2));
+  // Split Pix regulado pelo Banco Parceiro (Capítulo 14 do Pitch Editorial):
+  // 1. Portal Estilo Luxo: 20% comissão (sobre valor da mercadoria = R$ 22,00 para R$ 110)
+  // 2. Unicentro PY: ~71% mercadoria + margem FOB via câmbio regulado
+  // 3. Epyx: ~5% plataforma e-commerce
+  // 4. Tributos: ICMS estadual
+  const portalBrl = Number((params.subtotalBrl * 0.20).toFixed(2));
   const epyxBrl = Number((totalBrl * 0.05).toFixed(2));
   const taxBrl = icmsBrl;
   const unicentroBrl = Number(Math.max(0, totalBrl - portalBrl - epyxBrl - taxBrl).toFixed(2));
@@ -93,7 +98,7 @@ export function calculateQuote(params: {
       epyxBrl,
       taxBrl,
     },
-    expiresAt: new Date(Date.now() + 15 * 60 * 1000).toISOString(),
+    expiresAt: new Date(Date.now() + 30 * 60 * 1000).toISOString(),
   };
 }
 
@@ -105,9 +110,6 @@ export function formatCpf(value: string): string {
     .replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 }
 
-/**
- * Validação de CPF com algoritmo módulo 11 (Spec §27.4)
- */
 export function isValidCpf(cpf: string): boolean {
   const clean = cpf.replace(/\D/g, "");
   if (clean.length !== 11) return false;
@@ -144,12 +146,11 @@ export async function lookupCep(cep: string): Promise<{
   const clean = cep.replace(/\D/g, "");
   if (clean.length !== 8) return null;
 
-  // Fallback instantâneo para CEPs de capitais se offline ou ViaCEP lento (<=500ms SLA §27.4)
   const fallbackMap: Record<string, { street: string; district: string; city: string; state: string }> = {
-    "01310100": { street: "Avenida Paulista", district: "Bela Vista", city: "São Paulo", state: "SP" },
+    "05416010": { street: "Rua Aspicuelta", district: "Pinheiros", city: "São Paulo", state: "SP" },
     "01414001": { street: "Rua Oscar Freire", district: "Jardins", city: "São Paulo", state: "SP" },
-    "22410002": { street: "Rua Visconde de Pirajá", district: "Ipanema", city: "Rio de Janeiro", state: "RJ" },
-    "30112010": { street: "Rua da Bahia", district: "Lourdes", city: "Belo Horizonte", state: "MG" },
+    "90570020": { street: "Rua Padre Chagas", district: "Moinhos de Vento", city: "Porto Alegre", state: "RS" },
+    "51020000": { street: "Avenida Boa Viagem", district: "Boa Viagem", city: "Recife", state: "PE" },
   };
   if (fallbackMap[clean]) return fallbackMap[clean];
 
@@ -164,26 +165,16 @@ export async function lookupCep(cep: string): Promise<{
       const data = await res.json();
       if (!data.erro) {
         return {
-          street: data.logradouro || "Rua Principal",
-          district: data.bairro || "Centro",
+          street: data.logradouro || "Rua Aspicuelta",
+          district: data.bairro || "Pinheiros",
           city: data.localidade || "São Paulo",
           state: data.uf || "SP",
         };
       }
     }
   } catch {
-    // Fallback determinístico por prefixo de CEP
+    // fallback
   }
 
-  const firstDigit = clean[0];
-  if (firstDigit === "2") {
-    return { street: "Av. Atlântica", district: "Copacabana", city: "Rio de Janeiro", state: "RJ" };
-  }
-  if (firstDigit === "3") {
-    return { street: "Av. do Contorno", district: "Savassi", city: "Belo Horizonte", state: "MG" };
-  }
-  if (firstDigit === "8") {
-    return { street: "Rua XV de Novembro", district: "Batel", city: "Curitiba", state: "PR" };
-  }
-  return { street: "Rua Oscar Freire", district: "Jardins", city: "São Paulo", state: "SP" };
+  return { street: "Rua Aspicuelta", district: "Pinheiros", city: "São Paulo", state: "SP" };
 }

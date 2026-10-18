@@ -1,23 +1,27 @@
-✨ *PORTAL ESTILO LUXO · LOJA MOBILE v1.0 (Publicado na Vercel p/ Revisão)* ✨
+✨ *PORTAL ESTILO LUXO · CURADORIA DO PARAGUAI PARA O BRASIL*
+_Volume I · Pitch Editorial Outubro 2026_
 
-Olá, time! Segue o link oficial do protótipo interativo completo da *Loja Mobile v1.0 (Piloto Black Friday 2026)* publicado na Vercel para revisão de Produto, Design, Jurídico e Financeiro:
+Olá! Segue a versão atualizada da nossa loja mobile e tese executiva, seguindo o estudo de posicionamento, paleta e jornadas:
 
-🌐 *Acesse direto pelo celular ou computador:*
-👉 https://temporary-racing-topaz-9jxfuzr.vercel.app
+🌟 *POSICIONAMENTO & TESE*
+• _"Curadoria é o novo luxo acessível."_ Acessórios até US$ 50 FOB (preço final até R$ 250), com a Portal como canal curador da Unicentro em Ciudad del Este, sem reter o dinheiro da venda.
+• *Remessa Conforme Oficial*: Imposto Federal R$ 0,00 e ICMS estadual transparente no resumo. Zero surpresas na entrega!
+• *Split Pix Automático (4 vias)*: Portal (20% comissão líquida na hora), Unicentro PY (~71%), Plataforma Epyx (~5%) e Tributos (~4%).
+• *A Espera Sem Silêncio (12 dias)*: Rastreio Correios em 6 etapas com 4 notificações ativas por WhatsApp e e-mail (com foto do pacote em papel seda e cartão assinado da curadoria).
 
-🧭 *Atalhos diretos para cada fluxo:*
-• *Vitrine & Top 5 (F01/F02):* https://temporary-racing-topaz-9jxfuzr.vercel.app
-• *PDP c/ Zoom 2x (F03):* https://temporary-racing-topaz-9jxfuzr.vercel.app/produto/lenco-seda-riviera-esmeralda
-• *Sacola & ICMS Dinâmico (F04):* https://temporary-racing-topaz-9jxfuzr.vercel.app/carrinho
-• *Rastreio Correios 5 Etapas (F05):* https://temporary-racing-topaz-9jxfuzr.vercel.app/conta/pedidos/PEL-2026-0842
-• *Splash Editorial & KYC Banco (F06):* https://temporary-racing-topaz-9jxfuzr.vercel.app/boas-vindas
-• *Wishlist c/ Gráfico SVG 30d (F07):* https://temporary-racing-topaz-9jxfuzr.vercel.app/conta/desejos
-• *Assistente de Estilo IA (F08):* https://temporary-racing-topaz-9jxfuzr.vercel.app/conta/assistente
-• *Presente Compartilhado — Visão Bia (F09):* https://temporary-racing-topaz-9jxfuzr.vercel.app/s/aniversario-marina-2026
-• *Moda ao Vivo — Marina Ferraz (F10):* https://temporary-racing-topaz-9jxfuzr.vercel.app/live/quinta-luxo
-• *Design System Figma (145 Tokens / 14 Comp.):* https://temporary-racing-topaz-9jxfuzr.vercel.app/design-system
-• *KPIs & IA Postgres-as-Lake (§28):* https://temporary-racing-topaz-9jxfuzr.vercel.app/admin/analytics
+🎨 *IDENTIDADE VISUAL & BRAND BOOK*
+• Creme Editorial (#FAF7F2 · 65%) + Creme Profundo (#F0EBE0)
+• Preto Profundo (#0A0A0A · 20%) + Dourado Champagne (#B8924A · 8%)
+• Linha Pedra (#C9BFA8 · 2%)
+• Tipografia: Playfair Display (Serif Vogue) + Cormorant Garamond (Preços Itálicos) + Inter
 
-💡 *Dica:* No canto inferior direito da tela há o botão dourado *"Mapa 10 Fluxos"* para pular entre as 30 telas com 1 toque, e no topo você pode alternar o *Estado de Entrega (UF)* para ver o ICMS recalcular em tempo real (com Imposto Federal sempre R$ 0,00 no Remessa Conforme).
+👗 *3 PERSONAS MAPEADAS*
+1. *Maria Helena (38a · Gerente Fintech SP)*: Lenço Estampado Floral R$ 110
+2. *Beatriz (28a · Designer Freelancer RS)*: Brinco Gota Dourado 18k R$ 90
+3. *Carmen (45a · Empresária Recife)*: Bolsa de Palha Trançada R$ 210
 
-Fico no aguardo dos feedbacks para o nosso Steering Committee! 🚀
+📱 *LINKS PARA REVISÃO*
+• *Portal ao Vivo (PWA Vercel)*: https://temporary-racing-topaz-9jxfuzr.vercel.app
+• *Tese & Estudo Completo*: https://temporary-racing-topaz-9jxfuzr.vercel.app/estudo
+• *Repositório GitHub*: https://github.com/claudeik/portalluxoestilo
+• *Arquivo Offline*: Portal_Estilo_Luxo_Prototipo_WhatsApp.html (funciona direto no navegador sem instalar nada!)

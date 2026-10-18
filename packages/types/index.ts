@@ -1,3 +1,6 @@
+// packages/types/index.ts
+// Portal Estilo Luxo · Contratos TypeScript do Produto (Volume I · Pitch Editorial)
+
 export type KycStatus = "PENDING" | "SUBMITTED" | "APPROVED" | "REJECTED";
 export type ProductStatus = "ACTIVE" | "DRAFT" | "ARCHIVED" | "OUT_OF_STOCK";
 export type CartStatus = "OPEN" | "CHECKOUT" | "CONVERTED" | "EXPIRED" | "ABANDONED";
@@ -10,7 +13,7 @@ export type OrderStatus =
   | "DELIVERED"
   | "CANCELED"
   | "REFUNDED";
-export type PixStatus = "GENERATED" | "PAID" | "EXPIRED" | "FAILED";
+export type PixStatus = "GENERATED" | "PAID" | "EXPIRED" | "FAILED" | "WAITING_PAYMENT" | "CONFIRMED";
 export type ErpType = "BLING" | "SAMKYA";
 export type InvoiceStatus = "PENDING" | "EMITTED" | "CANCELED";
 export type SharedCartStatus = "OPEN" | "COMPLETED" | "EXPIRED" | "CANCELED";
@@ -52,8 +55,11 @@ export interface Product {
   categoryName: string;
   name: string;
   description: string;
+  tagline?: string;
+  editorialNote?: string;
   material?: string;
   color?: string;
+  colorHex?: string;
   dimensions?: string;
   weightGrams?: number;
   careInstructions?: string;
@@ -134,7 +140,7 @@ export interface TrackingEvent {
   description: string;
   location: string;
   occurredAt: string;
-  stepIndex: number; // 0 to 4
+  stepIndex: number; // 0 to 5
 }
 
 export interface Order {
@@ -159,7 +165,7 @@ export interface Order {
   status: OrderStatus;
   pixPayment?: PixPayment;
   trackingCode: string;
-  trackingStep: number; // 0..4
+  trackingStep: number; // 0..5
   trackingEvents: TrackingEvent[];
   invoiceNumber?: string;
   invoiceKey?: string;
